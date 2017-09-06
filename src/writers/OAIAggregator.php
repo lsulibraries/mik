@@ -50,14 +50,22 @@ class OAIAggregator extends Oaipmh
         $doc->formatOutput = true;
         $root = $doc->getElementsByTagNameNS($mods_ns, 'mods')->item(0);
 
-        //grab existing element abstract which has tulane:item
-        $oldAbstract = $doc->getElementsByTagNameNS($mods_ns, 'abstract')->item(0);
-        $abstractText = sprintf("(Original record: %s)  %s", $url, $oldAbstract->textContent);
+         //check that doc has  an abstract, else give it one, with our 'Original record' string
+        if($doc->getElementsByTagNameNS($mods_ns, 'abstract')->item(0)){
+          //grab existing element abstract which has tulane:item
+          $oldAbstract = $doc->getElementsByTagNameNS($mods_ns, 'abstract')->item(0);
+          $abstractText = sprintf("(Original record: %s)  %s", $url, $oldAbstract->textContent);
 
-        //new path added as element to root then
-        $newAbstract = $doc->createElement('abstract', $abstractText);
-        $root->replaceChild($newAbstract, $oldAbstract);
-        //        $root->appendChild($newAbstract);
+          //new path added as element to root then
+          $newAbstract = $doc->createElement('abstract', $abstractText);
+          $root->replaceChild($newAbstract, $oldAbstract);
+        }
+        else{
+          //new path added as element to root then
+          $abstractText = sprintf("(Original record: %s)", $url);
+          $newAbstract = $doc->createElement('abstract', $abstractText);
+          $root->appendChild($newAbstract);
+        }
 
         $metadata = $doc->saveXML();
 
