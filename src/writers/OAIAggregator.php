@@ -54,7 +54,7 @@ class OAIAggregator extends Oaipmh
         if($doc->getElementsByTagNameNS($mods_ns, 'abstract')->item(0)){
           //grab existing element abstract which has tulane:item
           $oldAbstract = $doc->getElementsByTagNameNS($mods_ns, 'abstract')->item(0);
-          $abstractText = sprintf("(Original record: %s)  %s", $url, $oldAbstract->textContent);
+          $abstractText = sprintf("(Original record: %s)  %s", $url, htmlspecialchars($oldAbstract->textContent));
 
           //new path added as element to root then
           $newAbstract = $doc->createElement('abstract', $abstractText);
